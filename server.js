@@ -1,13 +1,23 @@
-const express = require('express');
+const express = require("express");
+require("dotenv").config();
+const path = require('path');
+
+const router = require("./routes");
 
 const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware to serve static files
-app.use(express.static('public'));
+app.use(express.static("public"));
+
+// Route
+app.use(router);
 
 const PORT = process.env.PORT || 3000;
 
