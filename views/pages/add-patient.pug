@@ -1,0 +1,29 @@
+extends ../layouts/layout
+
+block content
+  .container.mt-5
+    .form-wrapper
+      h2.text-center.mb-4 Create New Patient
+      form(action='/submit', method='POST')
+        .row
+          .col-md-6.mb-3
+            label.form-label(for='name') Name
+            input.form-control(type='text' id='name' name='name' placeholder='Enter patient name' required)
+          .col-md-6.mb-3
+            label.form-label(for='age') Age
+            input.form-control(type='number' id='age' name='age' placeholder='Enter age' required)
+        .mb-3
+          label.form-label(for='medical_history') Medical History
+          textarea.form-control(id='medical_history' name='medical_history' rows='3' placeholder='Enter medical history details' required)
+        .row
+          .col-md-4.mb-3
+            label.form-label(for='phone') Phone
+            input.form-control(type='text' id='phone' name='phone' placeholder='Enter phone number' required)
+          .col-md-4.mb-3
+            label.form-label(for='email') Email
+            input.form-control(type='email' id='email' name='email' placeholder='Enter email address' required)
+          .col-md-4.mb-3
+            label.form-label(for='address') Address
+            input.form-control(type='text' id='address' name='address' placeholder='Enter home address' required)
+        .text-center
+          button.btn.btn-primary.mt-3(type='submit') Submit
