@@ -1,0 +1,32 @@
+extends ../layouts/layout
+
+block content
+  .container.mt-5
+    h2 Patients List
+    table.table.table-striped
+      thead
+        tr
+          th Name
+          th Age
+          th Medical History
+          th Contact Info
+          th Actions
+      tbody
+        tr
+          td John Doe
+          td 45
+          td Hypertension
+          td {"phone": "123456789", "email": "john.doe@mail.com"}
+          td
+            a.btn.btn-info(href='#') Edit
+            a.btn.btn-danger(href='#') Delete
+        tr
+          td Jane Smith
+          td 30
+          td Diabetes
+          td {"phone": "987654321", "email": "jane.smith@mail.com"}
+          td
+            a.btn.btn-info(href='#') Edit
+            a.btn.btn-danger(href='#') Delete
+    .mt-4
+    a.btn.btn-success(href='/patients/add') Create New Patient
