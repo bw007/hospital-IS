@@ -3,16 +3,34 @@ const pool = require("../config/db");
 
 const router = Router();
 
+// Add a new patient page
+router.get("/add", (req, res) => {  
+  try {
+    res.render("pages/add-patient", {
+      title: "Add Patient",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Get all patients
-router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {  
   try {
     const patients = await pool.query("SELECT * FROM patients");
-
+    
     if (patients.rows.length === 0) {
-      return res.status(404).json({ message: "Patients not found" });
+      return res.render("pages/patients", {
+        title: "Patients",
+        message: "No patients found",
+        patients: [],
+      });
     }
-
-    res.status(200).json(patients.rows);
+    
+    res.render("pages/patients", {
+      title: "Patients",
+      patients: patients.rows,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
