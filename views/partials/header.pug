@@ -1,0 +1,14 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.rounded.mb-4.p-3.sticky-top
+  .container-fluid
+    a.navbar-brand(href="/")
+      span(style="font-weight: 700; font-size: 1.5rem; letter-spacing: 1px; color: white;") Healthcare
+    button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+      span.navbar-toggler-icon
+    #navbarNav.collapse.navbar-collapse
+      ul.navbar-nav.ms-auto
+        li.nav-item
+          a.nav-link.active(aria-current="page", href="/") Home
+        li.nav-item
+          a.nav-link(href="/patients") Patients
+        li.nav-item
+          a.nav-link(href="/appointments") Appointments
