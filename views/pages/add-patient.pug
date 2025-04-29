@@ -1,29 +1,32 @@
 extends ../layouts/layout
 
 block content
-  .container.mt-5
-    .form-wrapper
-      h2.text-center.mb-4 Create New Patient
-      form(action='/submit', method='POST')
-        .row
-          .col-md-6.mb-3
-            label.form-label(for='name') Name
-            input.form-control(type='text' id='name' name='name' placeholder='Enter patient name' required)
-          .col-md-6.mb-3
-            label.form-label(for='age') Age
-            input.form-control(type='number' id='age' name='age' placeholder='Enter age' required)
-        .mb-3
-          label.form-label(for='medical_history') Medical History
-          textarea.form-control(id='medical_history' name='medical_history' rows='3' placeholder='Enter medical history details' required)
-        .row
-          .col-md-4.mb-3
-            label.form-label(for='phone') Phone
-            input.form-control(type='text' id='phone' name='phone' placeholder='Enter phone number' required)
-          .col-md-4.mb-3
-            label.form-label(for='email') Email
-            input.form-control(type='email' id='email' name='email' placeholder='Enter email address' required)
-          .col-md-4.mb-3
-            label.form-label(for='address') Address
-            input.form-control(type='text' id='address' name='address' placeholder='Enter home address' required)
-        .text-center
-          button.btn.btn-primary.mt-3(type='submit') Submit
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-primary.border-2
+          h2.text-center.mb-3.fs-5 New Patient
+          form(action='/patients/add', method='POST')
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='name') Name
+                input.form-control.form-control-sm(type='text' id='name' name='name' placeholder='Enter patient name' required)
+              .col-md-6.mb-2
+                label.form-label.small(for='age') Age
+                input.form-control.form-control-sm(type='number' id='age' name='age' placeholder='Enter age' required)
+            .mb-2
+              label.form-label.small(for='medical_history') Medical History
+              textarea.form-control.form-control-sm(id='medical_history' name='medical_history' rows='2' placeholder='Enter medical history details' required)
+            h5.mt-4.mb-2.fs-6 Contact Information
+            .row
+              .col-md-4.mb-2
+                label.form-label.small(for='phone') Phone
+                input.form-control.form-control-sm(type='text' id='phone' name='phone' placeholder='Enter phone number' required)
+              .col-md-4.mb-2
+                label.form-label.small(for='email') Email
+                input.form-control.form-control-sm(type='email' id='email' name='email' placeholder='Enter email address' required)
+              .col-md-4.mb-2
+                label.form-label.small(for='address') Address
+                input.form-control.form-control-sm(type='text' id='address' name='address' placeholder='Enter home address' required)
+            .text-end
+              button.btn.btn-sm.btn-primary.mt-2.px-4(type='submit') Create
