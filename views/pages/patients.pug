@@ -2,21 +2,23 @@ extends ../layouts/layout
 
 block content
   .container.mt-2
-    h2 Patients List
-    .mb-3.text-end
-      a.btn.btn-success(href='/patients/add') Add patient
+    .d-flex.justify-content-between.align-items-center.mb-3
+      h2 Patients List
+      a.btn.btn-sm.px-3.btn-success(href='/patients/add') Add patient
     if message
       .alert.alert-info= message
     if patients && patients.length > 0
       .table-responsive(style="max-height: 500px; overflow-y: auto;")
-        table.table.table-striped.table-hover(style="font-size: 0.9rem;")
-          thead.sticky-top
-            tr.bg-light
+        table.table.table-bordered.table-sm.table-striped.table-hover(style="font-size: 0.9rem;")
+          thead.sticky-top.table-dark
+            tr
               th.px-3 #
               th Name
               th Age
               th Medical History
-              th Contact Info
+              th Email
+              th Phone
+              th Address
               th Actions
           tbody
             each patient, i in patients
@@ -25,15 +27,20 @@ block content
                 td= patient.name
                 td= patient.age
                 td= patient.medical_history
+                td= patient.contact_info.email
+                td= patient.contact_info.phone
+                td= patient.contact_info.address
                 td
-                  if patient.contact_info
-                    // Contact info ni chiroyli ko'rsatish
-                    each val, key in patient.contact_info
-                      div
-                        strong.text-secondary.text-capitalize #{key}: 
-                        span #{val}
-                td
-                  a.btn.btn-sm.btn-info.me-1(href=`/patients/${patient.id}/edit`) Edit
-                  a.btn.btn-sm.btn-danger(href=`/patients/${patient.id}/delete`) Delete
+                  a.btn.btn-sm.btn-info.me-1(href=`/patients/${patient.id}/edit`)
+                    svg(xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16")
+                      path(d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z")
+                  a.btn.btn-sm.btn-danger.me-1(href=`/patients/${patient.id}/delete`)
+                    svg(xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16")
+                      path(d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0")
+                  a.btn.btn-sm.btn-primary(href=`/patients/${patient.id}`)
+                    svg(xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16")
+                      path(d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0")
+                      path(d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7")
+
     else if !message
       .alert.alert-warning No patients found in the database.
