@@ -6,11 +6,15 @@ block content
       .card.shadow-sm.border-0.h-100
         .card-body
           h5.card-title.mb-3.text-primary Patients
-          p.card-text.text-muted Number of patients: #{patientsTotal || 0}
+          p.card-text.text-muted
+            | Number of patients:
+            span.badge.bg-secondary.ms-2 #{patientsTotal || 0}
           a.btn.btn-primary.mt-3(href="/patients") Seeing patients
     .col-md-6
       .card.shadow-sm.border-0.h-100
         .card-body
           h5.card-title.mb-3.text-success Appointments
-          p.card-text.text-muted Number of appointments: #{appointmentsTotal || 0}
+          p.card-text.text-muted
+            | Number of appointments:
+            span.badge.bg-secondary.ms-2 #{appointmentsTotal || 0}
           a.btn.btn-success.mt-3(href="/appointments") View appointments
