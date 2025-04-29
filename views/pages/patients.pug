@@ -1,32 +1,39 @@
 extends ../layouts/layout
 
 block content
-  .container.mt-5
+  .container.mt-2
     h2 Patients List
-    table.table.table-striped
-      thead
-        tr
-          th Name
-          th Age
-          th Medical History
-          th Contact Info
-          th Actions
-      tbody
-        tr
-          td John Doe
-          td 45
-          td Hypertension
-          td {"phone": "123456789", "email": "john.doe@mail.com"}
-          td
-            a.btn.btn-info(href='#') Edit
-            a.btn.btn-danger(href='#') Delete
-        tr
-          td Jane Smith
-          td 30
-          td Diabetes
-          td {"phone": "987654321", "email": "jane.smith@mail.com"}
-          td
-            a.btn.btn-info(href='#') Edit
-            a.btn.btn-danger(href='#') Delete
-    .mt-4
-    a.btn.btn-success(href='/patients/add') Create New Patient
+    .mb-3.text-end
+      a.btn.btn-success(href='/patients/add') Add patient
+    if message
+      .alert.alert-info= message
+    if patients && patients.length > 0
+      .table-responsive(style="max-height: 500px; overflow-y: auto;")
+        table.table.table-striped.table-hover(style="font-size: 0.9rem;")
+          thead.sticky-top
+            tr.bg-light
+              th.px-3 #
+              th Name
+              th Age
+              th Medical History
+              th Contact Info
+              th Actions
+          tbody
+            each patient, i in patients
+              tr
+                td.px-3= i+1
+                td= patient.name
+                td= patient.age
+                td= patient.medical_history
+                td
+                  if patient.contact_info
+                    // Contact info ni chiroyli ko'rsatish
+                    each val, key in patient.contact_info
+                      div
+                        strong.text-secondary.text-capitalize #{key}: 
+                        span #{val}
+                td
+                  a.btn.btn-sm.btn-info.me-1(href=`/patients/${patient.id}/edit`) Edit
+                  a.btn.btn-sm.btn-danger(href=`/patients/${patient.id}/delete`) Delete
+    else if !message
+      .alert.alert-warning No patients found in the database.
