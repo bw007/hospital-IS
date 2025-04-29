@@ -34,13 +34,19 @@ router.get("/:id", async (req, res) => {
   try {
     const patient = await pool.query("SELECT * FROM patients WHERE id = $1", [
       req.params.id,
-    ]);
+    ]);    
 
     if (patient.rows.length === 0) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).render("pages/error", {
+        title: "Error",
+        message: "Patient not found",
+      });
     }
 
-    res.status(200).json(patient.rows[0]);
+    res.render("pages/patient-card", {
+      title: "Patient Details",
+      patient: patient.rows[0],
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -97,10 +103,12 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete a patient
-router.delete("/:id", async (req, res) => {
+router.delete ("/delete/:id", async (req, res) => {
   try {
-    await pool.query("DELETE FROM patients WHERE job_id = $1", [req.params.id]);
+    console.log("Patient deleted successfully");
 
+    await pool.query("DELETE FROM patients WHERE id = $1", [req.params.id]);
+    
     res.status(200).json({ message: "Patient deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
