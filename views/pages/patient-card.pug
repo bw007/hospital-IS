@@ -1,0 +1,49 @@
+extends ../layouts/layout
+
+block content
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-success.border-2.mt-3
+          h2.text-center.mb-3.fs-5 Patient Information
+
+          dl.row.mb-0
+            dt.col-sm-4.small.text-muted Name
+            dd.col-sm-8.mb-2= patient.name || '—'
+
+            dt.col-sm-4.small.text-muted Age
+            dd.col-sm-8.mb-2= patient.age || '—'
+
+            dt.col-sm-4.small.text-muted Medical History
+            dd.col-sm-8.mb-2= patient.medical_history || '—'
+
+            dt.col-sm-4.small.text-muted Phone
+            dd.col-sm-8.mb-2= patient.contact_info && patient.contact_info.phone ? patient.contact_info.phone : '—'
+
+            dt.col-sm-4.small.text-muted Email
+            dd.col-sm-8.mb-2= patient.contact_info && patient.contact_info.email ? patient.contact_info.email : '—'
+
+            dt.col-sm-4.small.text-muted Address
+            dd.col-sm-8.mb-2= patient.contact_info && patient.contact_info.address ? patient.contact_info.address : '—'
+
+            dt.col-sm-4.small.text-muted Created At
+            dd.col-sm-8.mb-2= patient.created_at ? new Date(patient.created_at).toLocaleDateString() : '—'
+            
+            dt.col-sm-4.small.text-muted Updated At
+            dd.col-sm-8.mb-2= patient.updated_at ? new Date(patient.updated_at).toLocaleDateString() : '—'
+
+          .d-flex.justify-content-between.mt-4
+            a.btn.btn-sm.btn-secondary.px-3(href='/patients') Back to List
+            button.btn.btn-sm.btn-danger(type="button", data-bs-toggle="modal", data-bs-target="#deleteModal") Delete
+
+        .modal.fade(id="deleteModal", tabindex="-1", aria-labelledby="deleteModalLabel", aria-hidden="true")
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h5.modal-title(id="deleteModalLabel") Delete Patient
+              .modal-body
+                p Are you sure you want to delete this patient?
+              .modal-footer
+                button.btn.btn-secondary.btn-sm(type="button", data-bs-dismiss="modal") Close
+                form(action=`/patients/delete/${patient.id}`, method="POST", onsubmit="event.preventDefault(); deletePatient(${patient.id});")
+                button.btn.btn-sm.btn-danger(onclick=`deletePatient('${patient.id}')`) Delete
