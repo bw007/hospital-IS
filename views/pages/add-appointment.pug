@@ -1,0 +1,31 @@
+extends ../layouts/layout
+
+block content
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-primary.border-2.mt-3
+          h2.text-center.mb-3.fs-5 New Appointment
+          form(action='/appointments/add', method='POST')
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='patient') Patient Name
+                input.form-control.form-control-sm(type='text' id='patient' name='patient' placeholder='Enter patient name' required)
+              .col-md-6.mb-2
+                label.form-label.small(for='doctor') Doctor Name
+                input.form-control.form-control-sm(type='text' id='doctor' name='doctor' placeholder='Enter doctor name' required)
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='date') Appointment Date
+                input.form-control.form-control-sm(type='date' id='date' name='date' required)
+              .col-md-6.mb-2
+                label.form-label.small(for='time') Appointment Time
+                input.form-control.form-control-sm(type='time' id='time' name='time' required)
+            .mb-2
+              label.form-label.small(for='reason') Reason for Visit
+              textarea.form-control.form-control-sm(id='reason' name='reason' rows='2' placeholder='Enter reason for appointment' required)
+            .mb-2
+              label.form-label.small(for='notes') Additional Notes
+              textarea.form-control.form-control-sm(id='notes' name='notes' rows='2' placeholder='Enter any additional notes')
+            .text-end
+              button.btn.btn-sm.btn-primary.mt-2.px-4(type='submit') Schedule Appointment
