@@ -5,13 +5,9 @@ const router = Router();
 
 // Add a new patient page
 router.get("/add", (req, res) => {  
-  try {
-    res.render("pages/add-patient", {
-      title: "Add Patient",
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  res.render("pages/add-patient", {
+    title: "Add Patient",
+  });
 });
 
 // Get all patients
@@ -19,20 +15,17 @@ router.get("/", async (req, res) => {
   try {
     const patients = await pool.query("SELECT * FROM patients");
     
-    if (patients.rows.length === 0) {
-      return res.render("pages/patients", {
-        title: "Patients",
-        message: "No patients found",
-        patients: [],
-      });
-    }
-    
     res.render("pages/patients", {
       title: "Patients",
       patients: patients.rows,
+      message: patients.rows.length === 0 ? "No patients found" : null
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Database error:", error);
+    res.status(500).render("pages/error", {
+      title: "Error",
+      message: "Could not retrieve patients data"
+    });
   }
 });
 
@@ -55,17 +48,31 @@ router.get("/:id", async (req, res) => {
 
 // Add a new patient
 router.post("/add", async (req, res) => {
-  try {
-    const { name, age, medical_history, contact_info } = req.body;
+  try {   
+    const { name, age, medical_history, ...contactFields } = req.body;
+    const contact_info = JSON.stringify(contactFields);
+    
+    if (!name || !age || !medical_history) {
+      return res.status(400).render("pages/add-patient", {
+        title: "Add Patient",
+        error: "Name, age and medical history are required",
+        formData: req.body
+      });
+    }
 
-    const newPatient = await pool.query(
+    await pool.query(
       "INSERT INTO patients (name, age, medical_history, contact_info) VALUES ($1, $2, $3, $4) RETURNING *",
       [name, age, medical_history, contact_info]
     );
 
-    res.status(201).json(newPatient.rows[0]);
+    res.redirect("/patients");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error:", error);
+    res.status(500).render("pages/add-patient", {
+      title: "Add Patient",
+      error: "Failed to add patient. Please try again.",
+      formData: req.body
+    });
   }
 });
 
