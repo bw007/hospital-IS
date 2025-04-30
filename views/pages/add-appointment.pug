@@ -9,18 +9,29 @@ block content
           form(action='/appointments/add', method='POST')
             .row
               .col-md-6.mb-2
-                label.form-label.small(for='patient') Patient Name
-                input.form-control.form-control-sm(type='text' id='patient' name='patient' placeholder='Enter patient name' required)
+                label.form-label.small(for='patient_id') Patient
+                select.form-select.form-select-sm(id='patient_id' name='patient_id' required)
+                  option(value='') Select Patient
+                  each patient in patients
+                    option(value=patient.id) #{patient.name}
               .col-md-6.mb-2
-                label.form-label.small(for='doctor') Doctor Name
-                input.form-control.form-control-sm(type='text' id='doctor' name='doctor' placeholder='Enter doctor name' required)
+                label.form-label.small(for='doctor_name') Doctor Name
+                input.form-control.form-control-sm(type='text' id='doctor_name' name='doctor_name' placeholder='Enter doctor name' required)
             .row
               .col-md-6.mb-2
-                label.form-label.small(for='date') Appointment Date
-                input.form-control.form-control-sm(type='date' id='date' name='date' required)
+                label.form-label.small(for='appointment_date') Appointment Date
+                input.form-control.form-control-sm(type='date' id='appointment_date' name='appointment_date' required)
               .col-md-6.mb-2
-                label.form-label.small(for='time') Appointment Time
-                input.form-control.form-control-sm(type='time' id='time' name='time' required)
+                label.form-label.small(for='appointment_time') Appointment Time
+                input.form-control.form-control-sm(type='time' id='appointment_time' name='appointment_time' required)
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='status') Status
+                select.form-select.form-select-sm(id='status' name='status' required)
+                  option(value='scheduled' selected) Scheduled
+                  option(value='completed') Completed
+                  option(value='cancelled') Cancelled
+              .col-md-6.mb-2
             .mb-2
               label.form-label.small(for='reason') Reason for Visit
               textarea.form-control.form-control-sm(id='reason' name='reason' rows='2' placeholder='Enter reason for appointment' required)

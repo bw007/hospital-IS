@@ -17,7 +17,7 @@ CREATE TABLE appointments (
   patient_id UUID REFERENCES patients(id),
   doctor_name VARCHAR(100) NOT NULL,
   appointment_date DATE NOT NULL,
-  status VARCHAR(40) NOT NULL,
+  status VARCHAR(40) CHECK (status IN ('scheduled', 'completed', 'cancelled')) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

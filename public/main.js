@@ -1,13 +1,13 @@
 // Delete function to send a DELETE request
 function deletePatient(patientId) {  
-  fetch(`/patients/delete/${patientId}`, {
+  fetch(`/patients/${patientId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then(response => response.json())
-    .then(data => { 
+    .then(_=> { 
       window.location.replace('/patients');
     })
     .catch(error => {

@@ -5,8 +5,11 @@ const router = Router();
 
 router.get("/add", async (req, res) => {
   try {
+    const patients = await pool.query("SELECT * FROM patients ORDER BY name")
+   
     res.render("pages/add-appointment", {
-      title: "add appointments"
+      title: "Add appointment",
+      patients: patients.rows
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -15,11 +18,16 @@ router.get("/add", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const appointments = await pool.query("SELECT * FROM appointments");
-
+    const appointments = await pool.query(`
+      SELECT appointments.*, patients.name AS patient_name
+      FROM appointments 
+      LEFT JOIN patients ON patients.id = appointments.patient_id
+      ORDER BY appointments.created_at DESC
+    `);
+    
     res.render("pages/appointments", {
-      title: "appointments",
-      appointmentss: appointments.rows,
+      title: "Appointments",
+      appointments: appointments.rows,
     });
 
   } catch (error) {

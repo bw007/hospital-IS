@@ -6,6 +6,7 @@ const {
   addNewPatient,
   updatePatient,
   deletePatient,
+  renderUpdatePatientPage,
 } = require("../controllers/patientController");
 
 const router = Router();
@@ -22,10 +23,13 @@ router.get("/:id", getPatientById);
 // Add a new patient
 router.post("/add", addNewPatient);
 
+// Update page
+router.get("/:id/edit", renderUpdatePatientPage);
+
 // Update a patient
-router.put("/:id", updatePatient);
+router.post("/:id/edit", updatePatient);
 
 // Delete a patient
-router.delete("/delete/:id", deletePatient);
+router.delete("/:id", deletePatient);
 
 module.exports = router;
