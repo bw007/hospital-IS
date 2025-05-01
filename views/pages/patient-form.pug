@@ -28,15 +28,19 @@ block content
                   value=patient ? patient.age : ''
                   required
                 )
-            .mb-2
-              label.form-label.small(for='medical_history') Medical History
-              textarea.form-control.form-control-sm(
-                id='medical_history' 
-                name='medical_history' 
-                rows='2' 
-                placeholder='Enter medical history details' 
-                required
-              )= patient ? patient.medical_history : ''
+            .mb-3
+              label.form-label.small.mb-1 Medical Conditions
+              .d-flex.flex-wrap
+                each condition in medicalConditions
+                  .form-check.form-check-inline(style='width: 180px; font-size: 0.85rem;')
+                    input.form-check-input(
+                      type='checkbox' 
+                      id=condition.value 
+                      name='medical_history[]' 
+                      value=condition.value 
+                      checked=patient && patient.medical_history && patient.medical_history.includes(condition.value) ? true : undefined
+                    )
+                    label.form-check-label(for=condition.value)= condition.label
             h5.mt-4.mb-2.fs-6 Contact Information
             .row
               .col-md-4.mb-2
