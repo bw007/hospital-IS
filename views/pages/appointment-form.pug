@@ -4,7 +4,6 @@ block content
   .container.py-3
     .row.justify-content-center
       .col-md-8
-        span #{appointment.appointment_date}
         .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-primary.border-2.mt-3
           h2.text-center.mb-3.fs-5= appointment ? 'Edit Appointment' : 'New Appointment'
           form(action=appointment ? '/appointments/' + appointment.id + '/edit' : '/appointments/add' method='POST')
