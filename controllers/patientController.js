@@ -1,9 +1,11 @@
 const pool = require("../config/db");
+const { medicalConditions } = require("../utils/medicalConditions");
 
 // GET /patients/add
 const renderAddPatientPage = (req, res) => {
   res.render("pages/patient-form", {
     title: "Add Patient",
+    medicalConditions,
   });
 };
 
@@ -12,6 +14,16 @@ const getAllPatients = async (req, res) => {
   try {
     const patients = await pool.query("SELECT * FROM patients");
 
+    patients.rows.forEach((patient) => {
+      let medicalHistory = patient.medical_history.replace(/[{}]/g, '')
+        .split(',')
+        .map(item => item.replace(/"/g, '').trim());
+      
+      patient.medical_history = medicalHistory.map((condition) => {
+        return medicalConditions.find((c) => c.value === condition.trim()).label;
+      }).join(", ");
+    });
+    
     res.render("pages/patients", {
       title: "Patients",
       patients: patients.rows,
@@ -55,14 +67,6 @@ const addNewPatient = async (req, res) => {
     const { name, age, medical_history, ...contactFields } = req.body;
     const contact_info = JSON.stringify(contactFields);
 
-    if (!name || !age || !medical_history) {
-      return res.status(400).render("pages/add-patient", {
-        title: "Add Patient",
-        error: "Name, age and medical history are required",
-        formData: req.body,
-      });
-    }
-
     await pool.query(
       "INSERT INTO patients (name, age, medical_history, contact_info) VALUES ($1, $2, $3, $4)",
       [name, age, medical_history, contact_info]
@@ -88,7 +92,8 @@ const renderUpdatePatientPage = async (req, res) => {
     
     res.render("pages/patient-form", {
       title: "Update Patient",
-      patient: patient.rows[0]
+      patient: patient.rows[0],
+      medicalConditions
     });
   } catch (error) {
     
