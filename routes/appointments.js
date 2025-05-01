@@ -7,7 +7,7 @@ router.get("/add", async (req, res) => {
   try {
     const patients = await pool.query("SELECT * FROM patients ORDER BY name")
    
-    res.render("pages/add-appointment", {
+    res.render("pages/appointment-form", {
       title: "Add appointment",
       patients: patients.rows
     });
@@ -52,36 +52,65 @@ router.get("/:id", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    const { name, salary, degree, job_id } = req.body;
-    const newappointments = await pool.query(`
-        INSERT INTO appointments (name, salary, degree, job_id) VALUES ($1, $2, $3, $4) RETURNING *
-      `, [ name, salary, degree, job_id ]);
+    const { patient_id, doctor_name, appointment_date, status } = req.body;
+    console.log(req.body);
+    
+    await pool.query(`
+        INSERT INTO appointments (patient_id, doctor_name, appointment_date, status ) VALUES ($1, $2, $3, $4) RETURNING *
+      `, [ patient_id, doctor_name, appointment_date, status || 'scheduled' ]);
 
-    res.status(201).json(newappointments.rows[0]);
+    res.redirect('/appointments');
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-router.put("/edit/:id", async (req, res) => { 
+router.get("/:id/edit", async (req, res) => {
+  try {
+    const appointment = await pool.query("SELECT * FROM appointments WHERE id = $1", [req.params.id]);
+    const patients = await pool.query("SELECT * FROM patients ORDER BY name");
+    
+    res.render("pages/appointment-form", {
+      title: "Update appointment",
+      patients: patients.rows,
+      appointment: appointment.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put("/:id/edit", async (req, res) => { 
   try {
     const { id } = req.params;
-    const { name, salary, degree, job_id } = req.body;
+    const { patient_id, doctor_name, appointment_date, status } = req.body;
 
-    const oldappointments = (await pool.query("SELECT * FROM appointments WHERE id = $1", [ id ])).rows[0];
+    const oldAppointment = (await pool.query("SELECT * FROM appointments WHERE id = $1", [id])).rows[0];
+    
+    if (!oldAppointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
 
-    const updateappointments = await pool.query(`
-        UPDATE appointments SET name = $1, salary = $2, degree = $3, job_id = $4 WHERE id = $5 RETURNING *
+    // Ma'lumotlarni yangilash - kelgan ma'lumotlar bo'lmasa eski qiymatlardan foydalanish
+    const updatedAppointment = await pool.query(`
+        UPDATE appointments 
+        SET patient_id = $1, 
+            doctor_name = $2, 
+            appointment_date = $3, 
+            status = $4 
+        WHERE id = $5 
+        RETURNING *
       `, [
-        name ? name : oldappointments.name,
-        salary ? salary : oldappointments.salary,
-        degree ? degree : oldappointments.degree,
-        job_id ? job_id : oldappointments.job_id,
+        patient_id || oldAppointment.patient_id,
+        doctor_name || oldAppointment.doctor_name,
+        appointment_date || oldAppointment.appointment_date,
+        status || oldAppointment.status,
         id
       ]
     );
       
-    res.status(201).json(updateappointments.rows[0]);
+    // API so'rovi uchun JSON javob
+    res.status(200).json(updatedAppointment.rows[0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
