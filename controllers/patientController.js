@@ -27,7 +27,9 @@ const getAllPatients = async (req, res) => {
     res.render("pages/patients", {
       title: "Patients",
       patients: patients.rows,
-      message: patients.rows.length === 0 ? "No patients found" : null
+      medicalConditions,
+      query: req.query,
+      message: patients.rows.length === 0 ? "No patients." : null
     });
   } catch (error) {
     console.error("Database error:", error);
@@ -45,19 +47,24 @@ const getPatientById = async (req, res) => {
       req.params.id,
     ]);
 
-    if (patient.rows.length === 0) {
-      return res.status(404).render("pages/error", {
-        title: "Error",
-        message: "Patient not found",
-      });
-    }
+    let medicalHistory = patient.rows[0].medical_history.replace(/[{}]/g, '')
+      .split(',')
+      .map(item => item.replace(/"/g, '').trim());
+    
+    patient.rows[0].medical_history = medicalHistory.map((condition) => {
+      return medicalConditions.find((c) => c.value === condition.trim()).label;
+    }).join(", ");
 
     res.render("pages/patient-card", {
       title: "Patient Details",
       patient: patient.rows[0],
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Database error:", error);
+    res.status(500).render("pages/error", {
+      title: "Error",
+      message: "Could not retrieve patient data",
+    });
   }
 };
 
@@ -96,7 +103,10 @@ const renderUpdatePatientPage = async (req, res) => {
       medicalConditions
     });
   } catch (error) {
-    
+    res.status(500).render("pages/error", {
+      title: "Error",
+      message: "Could not retrieve patient data for update",
+    });
   }
 }
 
@@ -114,7 +124,11 @@ const updatePatient = async (req, res) => {
 
     res.redirect("/patients");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error:", error);
+    res.status(500).render("pages/error", {
+      title: "Error",
+      message: "Failed to update patient. Please try again.",
+    });
   }
 };
 
@@ -124,7 +138,10 @@ const deletePatient = async (req, res) => {
     await pool.query("DELETE FROM patients WHERE id = $1", [req.params.id]);
     res.status(200).json({ message: "Patient deleted" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).render("pages/error", {
+      title: "Error",
+      message: "Failed to delete patient. Please try again.",
+    });
   }
 };
 
