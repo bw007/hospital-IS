@@ -1,10 +1,20 @@
 extends ../layouts/layout
 
 block content
-  .container.mt-2
+  .container.mt-3
     .d-flex.justify-content-between.align-items-center.mb-3
-      h2 Appointments List
+      h4 Appointments List
       a.btn.btn-sm.px-3.btn-success(href='/appointments/add') Add appointment
+    form(method='GET', action='/appointments', class='row g-2 mb-3')
+      .col-md-4
+        label.form-label(for='from') From Date
+        input#from.form-control.form-control-sm(type='date', value=values[0] || '', name='from', required)
+      .col-md-4
+        label.form-label(for='to') To Date
+        input#to.form-control.form-control-sm(type='date', value=values[1] || '', name='to', required)
+      .col-md-4.d-flex.align-items-end
+        button.btn.btn-sm.btn-primary.me-2(type='submit') Filter
+        button.btn.btn-sm.btn-warning(type='reset' onclick='window.location.href="/appointments"' disabled=!values[0] || !values[1]) Reset
     if message
       .alert.alert-info= message
     if appointments && appointments.length > 0
@@ -13,8 +23,8 @@ block content
           thead.sticky-top.table-dark
             tr
               th.px-3 #
-              th Patient Name
               th Doctor Name
+              th Patient Name
               th Appointment Date
               th Status
               th Created At
@@ -23,8 +33,8 @@ block content
             each appointment, i in appointments
               tr
                 td.px-3= i+1
+                td= 'Dr. ' + appointment.doctor_name
                 td= appointment.patient_name
-                td= appointment.doctor_name
                 td= new Date(appointment.appointment_date).toLocaleString()
                 td
                   span(class=`badge bg-${appointment.status === 'scheduled' ? 'primary' : appointment.status === 'completed' ? 'success' : 'danger'}`)

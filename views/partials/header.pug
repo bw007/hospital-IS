@@ -7,8 +7,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.rounded.px-3.py-2.sticky-top(
     #navbarNav.collapse.navbar-collapse
       ul.navbar-nav.ms-auto
         li.nav-item
-          a.nav-link.active(aria-current="page", href="/") Home
+          a.nav-link(href="/", class=currentPath === '/' ? 'active' : '') Home
         li.nav-item
-          a.nav-link(href="/patients") Patients
+          a.nav-link(href="/patients", class=currentPath.startsWith('/patients') ? 'active' : '') Patients
         li.nav-item
-          a.nav-link(href="/appointments") Appointments
+          a.nav-link(href="/appointments", class=currentPath.startsWith('/appointments') ? 'active' : '') Appointments
