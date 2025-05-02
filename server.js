@@ -16,6 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to serve static files
 app.use(express.static("public"));
 
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
+
 // Route
 app.use(router);
 
