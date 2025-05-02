@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const pool = require("../config/db");
+const { medicalConditions } = require("../utils/medicalConditions");
 
 const router = Router();
 
@@ -16,37 +17,51 @@ router.get("/add", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const appointments = await pool.query(`
-      SELECT appointments.*, patients.name AS patient_name
-      FROM appointments 
-      LEFT JOIN patients ON patients.id = appointments.patient_id
-      ORDER BY appointments.created_at DESC
-    `);
+// Get all appointments
+router.get('/', async (req, res) => {
+  const { from, to } = req.query;
 
-    res.render("pages/appointments", {
-      title: "Appointments",
-      appointments: appointments.rows,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  const query = `
+    SELECT appointments.*, patients.name AS patient_name
+    FROM appointments
+    LEFT JOIN patients ON patients.id = appointments.patient_id
+    ${from && to ? `WHERE appointment_date BETWEEN '${from}' AND '${to}'` : ''}
+    ORDER BY appointments.created_at DESC
+  `;
+
+  const appointments = await pool.query(query);
+
+  res.render('pages/appointments', {
+    title: 'Appointments',
+    appointments: appointments.rows,
+    values: [from, to]
+  });
 });
+
 
 router.get("/:id", async (req, res) => {
   try {
-    const appointments = await pool.query(
-      `
-      SELECT appointments.name, appointments.salary, jobs.title
+    const appointment = await pool.query(`
+      SELECT appointments.*, patients.name AS patient_name, patients.medical_history AS patient_medical_history
       FROM appointments 
-      LEFT JOIN jobs ON job_id = appointments.job_id
-      WHERE appointments.id = $1  
+      LEFT JOIN patients ON patients.id = appointments.patient_id
+      WHERE appointments.id = $1
     `,
       [req.params.id]
     );
 
-    res.status(200).json(appointments.rows[0]);
+    let medicalHistory = appointment.rows[0].patient_medical_history.replace(/[{}]/g, '')
+      .split(',')
+      .map(item => item.replace(/"/g, '').trim());
+
+    appointment.rows[0].patient_medical_history = medicalHistory.map((condition) => {
+      return medicalConditions.find((c) => c.value === condition.trim()).label;
+    }).join(", ");
+
+    res.render("pages/appointment-card", {
+      title: "Appointment Details",
+      appointment: appointment.rows[0],
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -108,7 +123,7 @@ router.post("/:id/edit", async (req, res) => {
         doctor_name || oldAppointment.doctor_name,
         appointment_date || oldAppointment.appointment_date,
         status || oldAppointment.status,
-        id,
+        req.params.id,
       ]
     );
 
