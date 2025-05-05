@@ -74,6 +74,7 @@ const getPatientById = async (req, res) => {
     let medicalHistory = patient.rows[0].medical_history.replace(/[{}]/g, '')
       .split(',')
       .map(item => item.replace(/"/g, '').trim());
+    console.log(medicalHistory);
     
     patient.rows[0].medical_history = medicalHistory.map((condition) => {
       return medicalConditions.find((c) => c.value === condition.trim()).label;

@@ -12,11 +12,20 @@ CREATE TABLE patients (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE doctors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(100) NOT NULL,
+  specialty VARCHAR(100) NOT NULL,
+  contact_info JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
 CREATE TABLE appointments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id UUID REFERENCES patients(id),
-  doctor_name VARCHAR(100) NOT NULL,
-  appointment_date DATE NOT NULL,
+  doctor_id UUID REFERENCES doctors(id),
+  appointment_datetime TIMESTAMP NOT NULL,
   status VARCHAR(40) CHECK (status IN ('scheduled', 'completed', 'cancelled')) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

@@ -15,7 +15,7 @@ block content
               id=condition.value,
               name='medical_history',
               value=condition.value,
-              checked=Array.isArray(query.medical_history) ? query.medical_history.includes(condition.value) : query.medical_history === condition.value ? true : undefined
+              checked=Array.isArray(query.medical_history) ? query.medical_history.includes(condition.value) : query.medical_history === condition.value ? true : false
             )
             label.form-check-label(for=condition.value)= condition.label
       button.btn.btn-sm.btn-primary.mt-2.me-2(type='submit') Filter

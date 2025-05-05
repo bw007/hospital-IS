@@ -20,7 +20,7 @@ block content
             .row
               .col-md-6.mb-2
                 label.form-label.small(for='appointment_date') Appointment Date
-                input.form-control.form-control-sm(type='date' id='appointment_date' name='appointment_date'   value=appointment && appointment.appointment_date ? new Date(appointment.appointment_date).toISOString().split('T')[0] : '' required)
+                input.form-control.form-control-sm(type='datetime-local' id='appointment_date' name='appointment_date'   value=appointment && appointment.appointment_date ? new Date(appointment.appointment_date).toISOString().split('T')[0] : '' required)
               .col-md-6.mb-2
                 label.form-label.small(for='status') Status
                 select.form-select.form-select-sm(id='status' name='status' required disabled=!appointment)

@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
   });
 });
 
-
+// Get appointment by ID
 router.get("/:id", async (req, res) => {
   try {
     const appointment = await pool.query(`
@@ -49,15 +49,15 @@ router.get("/:id", async (req, res) => {
     `,
       [req.params.id]
     );
-
+    
     let medicalHistory = appointment.rows[0].patient_medical_history.replace(/[{}]/g, '')
       .split(',')
       .map(item => item.replace(/"/g, '').trim());
-
+      
     appointment.rows[0].patient_medical_history = medicalHistory.map((condition) => {
       return medicalConditions.find((c) => c.value === condition.trim()).label;
     }).join(", ");
-
+    
     res.render("pages/appointment-card", {
       title: "Appointment Details",
       appointment: appointment.rows[0],
