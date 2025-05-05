@@ -12,18 +12,41 @@ const renderAddPatientPage = (req, res) => {
 // GET /patients
 const getAllPatients = async (req, res) => {
   try {
-    const patients = await pool.query("SELECT * FROM patients");
+    let query = "SELECT * FROM patients";
+    const queryParams = [];
+
+    if (req.query.medical_history) {
+      const selectedMedicalConditions = Array.isArray(req.query.medical_history) 
+        ? req.query.medical_history 
+        : [req.query.medical_history];
+      
+      if (selectedMedicalConditions.length > 0) {
+        const conditions = selectedMedicalConditions.map((condition, index) => {
+          queryParams.push(`%"${condition}"%`);
+          return `medical_history LIKE $${index + 1}`;
+        });
+        query += " WHERE " + conditions.join(" OR ");
+      }
+    }
+
+    const patients = await pool.query(query, queryParams);
 
     patients.rows.forEach((patient) => {
-      let medicalHistory = patient.medical_history.replace(/[{}]/g, '')
-        .split(',')
-        .map(item => item.replace(/"/g, '').trim());
+      let medicalHistory = [];
+      
+      if (patient.medical_history) {
+        medicalHistory = patient.medical_history
+          .replace(/[{}]/g, '')
+          .split(',')
+          .map(item => item.replace(/"/g, '').trim());
+      }
       
       patient.medical_history = medicalHistory.map((condition) => {
-        return medicalConditions.find((c) => c.value === condition.trim()).label;
+        const found = medicalConditions.find((c) => c.value === condition.trim());
+        return found ? found.label : condition.trim();
       }).join(", ");
     });
-    
+
     res.render("pages/patients", {
       title: "Patients",
       patients: patients.rows,
@@ -33,6 +56,7 @@ const getAllPatients = async (req, res) => {
     });
   } catch (error) {
     console.error("Database error:", error);
+    console.error(error.stack);
     res.status(500).render("pages/error", {
       title: "Error",
       message: "Could not retrieve patients data"
