@@ -9,17 +9,17 @@ block content
       label.form-label.small.mb-1 Medical Conditions
       .d-flex.flex-wrap
         each condition in medicalConditions
-          .form-check.form-check-inline(style='width: 180px; font-size: 0.85rem;')
+          .form-check.form-check-inline(style='width: 120px; font-size: 0.85rem;')
             input.form-check-input(
               type='checkbox',
               id=condition.value,
-              name='medical_history[]',
+              name='medical_history',
               value=condition.value,
               checked=Array.isArray(query.medical_history) ? query.medical_history.includes(condition.value) : query.medical_history === condition.value ? true : undefined
             )
             label.form-check-label(for=condition.value)= condition.label
-      button.btn.btn-sm.btn-primary.mt-2(type='submit') Filter
-      a.btn.btn-sm.btn-warning.mt-2.ms-2(href='/patients') Reset
+      button.btn.btn-sm.btn-primary.mt-2.me-2(type='submit') Filter
+      button.btn.btn-sm.btn-warning.mt-2(type='reset' onclick='window.location.href="/patients"' disabled=!query.medical_history) Reset
 
     if message
       .alert.alert-info= message
