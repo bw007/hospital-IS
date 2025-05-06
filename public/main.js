@@ -1,3 +1,22 @@
+// Delete function for doctors
+function deleteDoctor(doctorId) {  
+  fetch(`/doctors/${doctorId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+    .then(_=> {
+      alert('Doctor deleted successfully!');
+      
+      window.location.replace('/doctors');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
 // Delete function for patients
 function deletePatient(patientId) {  
   fetch(`/patients/${patientId}`, {
@@ -33,6 +52,15 @@ function deleteAppointment(appointmentId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const doctorDeleteButtons = document.querySelectorAll('.doctor-delete-btn');
+    
+  doctorDeleteButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+    const doctorId = event.target.getAttribute('data-doctor-id');
+    deleteDoctor(doctorId);
+    });
+  });
+
   const patientDeleteButtons = document.querySelectorAll('.patient-delete-btn');
   
   patientDeleteButtons.forEach(button => {

@@ -84,11 +84,22 @@ const updateDoctor = async (req, res) => {
   }
 };
 
+// Delete doctor
+const deleteDoctor = async (req, res) => {
+  try {
+    await pool.query('DELETE FROM doctors WHERE id = $1', [req.params.id]);
+    res.redirect('/doctors');
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllDoctors,
   getDoctorById,
   renderAddDoctorPage,
   addNewDoctor,
   renderUpdateDoctorPage,
-  updateDoctor
+  updateDoctor,
+  deleteDoctor
 };

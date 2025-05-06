@@ -1,0 +1,45 @@
+extends ../layouts/layout
+
+block content
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-success.border-2.mt-3
+          h2.text-center.mb-3.fs-5 Doctor Information
+
+          dl.row.mb-0
+            dt.col-sm-4.small.text-muted Name
+            dd.col-sm-8.mb-2= doctor.name || '—'
+
+            dt.col-sm-4.small.text-muted Specialization
+            dd.col-sm-8.mb-2= doctor.specialty || '—'
+
+            dt.col-sm-4.small.text-muted Phone
+            dd.col-sm-8.mb-2= doctor.contact_info && doctor.contact_info.phone ? doctor.contact_info.phone : '—'
+
+            dt.col-sm-4.small.text-muted Email
+            dd.col-sm-8.mb-2= doctor.contact_info && doctor.contact_info.email ? doctor.contact_info.email : '—'
+
+            dt.col-sm-4.small.text-muted Address
+            dd.col-sm-8.mb-2= doctor.contact_info && doctor.contact_info.address ? doctor.contact_info.address : '—'
+
+            dt.col-sm-4.small.text-muted Created At
+            dd.col-sm-8.mb-2= doctor.created_at ? new Date(doctor.created_at).toLocaleString() : '—'
+
+            dt.col-sm-4.small.text-muted Updated At
+            dd.col-sm-8.mb-2= doctor.updated_at ? new Date(doctor.updated_at).toLocaleString() : '—'
+
+          .d-flex.justify-content-between.mt-4
+            a.btn.btn-sm.btn-secondary.px-3(href='/doctors') Back to List
+            button.btn.btn-sm.btn-danger(type="button" data-bs-toggle="modal" data-bs-target="#deleteModal") Delete
+
+        .modal.fade(id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true")
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h5.modal-title(id="deleteModalLabel") Delete Doctor
+              .modal-body
+                p Are you sure you want to delete this doctor?
+              .modal-footer
+                button.btn.btn-secondary.btn-sm(type="button" data-bs-dismiss="modal") Close
+                button.btn.btn-sm.btn-danger(onclick=`deleteDoctor('${doctor.id}')`) Delete
