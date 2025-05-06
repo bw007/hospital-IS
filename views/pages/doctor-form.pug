@@ -1,0 +1,65 @@
+extends ../layouts/layout
+
+block content
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-primary.border-2.mt-3
+          h2.text-center.mb-3.fs-5 #{doctor ? 'Update' : 'New Doctor'}
+          form(action=doctor ? '/doctors/' + doctor.id + '/edit' : '/doctors/add', method='POST')
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='name') Name
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='name'
+                  name='name' 
+                  placeholder='Enter doctor name'
+                  value=doctor ? doctor.name : ''
+                  required
+                )
+              .col-md-6.mb-2
+                label.form-label.small(for='specialty') Specialty
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='specialty' 
+                  name='specialty' 
+                  placeholder='Enter specialization'
+                  value=doctor ? doctor.specialty : ''
+                  required
+                )
+            h5.mt-4.mb-2.fs-6 Contact Information
+            .row
+              .col-md-4.mb-2
+                label.form-label.small(for='phone') Phone
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='phone' 
+                  name='phone' 
+                  placeholder='Enter phone number'
+                  value=doctor ? doctor.contact_info.phone : ''
+                  required
+                )
+              .col-md-4.mb-2
+                label.form-label.small(for='email') Email
+                input.form-control.form-control-sm(
+                  type='email' 
+                  id='email' 
+                  name='email' 
+                  placeholder='Enter email address'
+                  value=doctor ? doctor.contact_info.email : ''
+                  required
+                )
+              .col-md-4.mb-2
+                label.form-label.small(for='address') Address
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='address' 
+                  name='address' 
+                  placeholder='Enter office address'
+                  value=doctor ? doctor.contact_info.address : ''
+                  required
+                )
+            .d-flex.justify-content-between.mt-4
+              a.btn.btn-sm.btn-secondary.px-3(href='/doctors') Back to List
+              button.btn.btn-sm.btn-primary.px-4(type='submit') #{doctor ? 'Update' : 'Create'}
