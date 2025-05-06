@@ -8,6 +8,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.rounded.px-3.py-2.sticky-top(
       ul.navbar-nav.ms-auto
         li.nav-item
           a.nav-link(href="/", class=currentPath === '/' ? 'active' : '') Home
+        li.nav-item 
+          a.nav-link(href="/doctors", class=currentPath.startsWith('/doctors') ? 'active' : '') Doctors
         li.nav-item
           a.nav-link(href="/patients", class=currentPath.startsWith('/patients') ? 'active' : '') Patients
         li.nav-item
