@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  .container
+    h1.mb-4 Doctors List
+    .row
+      each doctor in doctors
+        .col-md-4.mb-3
+          .card
+            .card-body
+              h5.card-title= doctor.name
+              p.card-text
+                strong Specialty: 
+                span= doctor.specialty
+              p.card-text
+                strong Contact: 
+                span= doctor.contact
+              a.btn.btn-primary(href=`/doctors/${doctor._id}`) View Details

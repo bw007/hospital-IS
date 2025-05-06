@@ -2,7 +2,15 @@ extends ../layouts/layout
 
 block content
   .row.g-4
-    .col-md-6
+    .col-md-4
+      .card.shadow-sm.border-0.h-100
+        .card-body
+          h5.card-title.mb-3.text-danger Doctors
+          p.card-text.text-muted
+            | Number of doctors:
+            span.badge.bg-secondary.ms-2 #{doctorsTotal || 0}
+          a.btn.btn-danger.mt-3(href="/doctors") View doctors
+    .col-md-4
       .card.shadow-sm.border-0.h-100
         .card-body
           h5.card-title.mb-3.text-primary Patients
@@ -10,7 +18,7 @@ block content
             | Number of patients:
             span.badge.bg-secondary.ms-2 #{patientsTotal || 0}
           a.btn.btn-primary.mt-3(href="/patients") Seeing patients
-    .col-md-6
+    .col-md-4
       .card.shadow-sm.border-0.h-100
         .card-body
           h5.card-title.mb-3.text-success Appointments
