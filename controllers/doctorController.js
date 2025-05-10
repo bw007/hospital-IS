@@ -88,12 +88,18 @@ const updateDoctor = async (req, res) => {
 const deleteDoctor = async (req, res) => {
   try {
     await pool.query('DELETE FROM doctors WHERE id = $1', [req.params.id]);
+<<<<<<< HEAD
     res.status(200).json({ message: "Doctor deleted" })
   } catch (error) {
     res.status(500).render("pages/error", {
       title: "Error",
       message: "Failed to delete doctor. Please try again.",
     });
+=======
+    res.redirect('/doctors');
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+>>>>>>> f853560fece05fac4a8da4cf87226f2f7eed3318
   }
 };
 
