@@ -18,9 +18,18 @@ block content
               checked=Array.isArray(query.medical_history) ? query.medical_history.includes(condition.value) : query.medical_history === condition.value ? true : false
             )
             label.form-check-label(for=condition.value)= condition.label
-      button.btn.btn-sm.btn-primary.mt-2.me-2(type='submit') Filter
-      button.btn.btn-sm.btn-warning.mt-2(type='reset' onclick='window.location.href="/patients"' disabled=!query.medical_history) Reset
-
+      label.form-label.small.mt-2.text-muted
+        | Find patients with no appointments within the selected date range
+      .d-flex.flex-wrap.align-items-end.gap-2
+        .d-flex.flex-column
+          label.form-label.small.mb-1 From Date
+          input.form-control.form-control-sm(type='date', value=query.from || '', name='from', style='width: 160px; font-size: 0.85rem;')
+        .d-flex.flex-column
+          label.form-label.small.mb-1 To Date
+          input.form-control.form-control-sm(type='date', value=query.to || '', name='to', style='width: 160px; font-size: 0.85rem;')
+        .d-flex
+          button.btn.btn-sm.btn-primary.mt-2.me-2(type='submit') Filter
+          button.btn.btn-sm.btn-warning.mt-2(type='reset' onclick='window.location.href="/patients"' disabled=!query.from && !query.to && !query.medical_history) Reset
     if message
       .alert.alert-info= message
     if patients && patients.length > 0

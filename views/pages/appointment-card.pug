@@ -18,7 +18,7 @@ block content
             dd.col-sm-8.mb-2= appointment.patient_medical_history || '—'
 
             dt.col-sm-4.small.text-muted Appointment Date
-            dd.col-sm-8.mb-2= appointment.appointment_date ? new Date(appointment.appointment_date).toLocaleString() : '—'
+            dd.col-sm-8.mb-2= appointment.appointment_datetime ? new Date(appointment.appointment_datetime).toLocaleString() : '—'
 
             dt.col-sm-4.small.text-muted Status
             dd.col-sm-8.mb-2
