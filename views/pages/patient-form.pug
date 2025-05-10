@@ -1,0 +1,78 @@
+extends ../layouts/layout
+
+block content
+  .container.py-3
+    .row.justify-content-center
+      .col-md-8
+        .form-wrapper.bg-white.shadow-sm.p-3.border-top.border-primary.border-2.mt-3
+          h2.text-center.mb-3.fs-5 #{patient ? 'Update Patient' : 'New Patient'}
+          form(action=patient ? '/patients/' + patient.id + '/edit' : '/patients/add', method='POST')
+            .row
+              .col-md-6.mb-2
+                label.form-label.small(for='name') Name
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='name'
+                  name='name' 
+                  placeholder='Enter patient name'
+                  value=patient ? patient.name : ''
+                  required
+                )
+              .col-md-6.mb-2
+                label.form-label.small(for='age') Age
+                input.form-control.form-control-sm(
+                  type='number' 
+                  id='age' 
+                  name='age' 
+                  placeholder='Enter age'
+                  value=patient ? patient.age : ''
+                  required
+                )
+            .mb-3
+              label.form-label.small.mb-1 Medical Conditions
+              .d-flex.flex-wrap
+                each condition in medicalConditions
+                  .form-check.form-check-inline(style='width: 180px; font-size: 0.85rem;')
+                    input.form-check-input(
+                      type='checkbox' 
+                      id=condition.value 
+                      name='medical_history[]' 
+                      value=condition.value 
+                      checked=patient && patient.medical_history && patient.medical_history.includes(condition.value) ? true : undefined
+                    )
+                    label.form-check-label(for=condition.value)= condition.label
+            h5.mt-4.mb-2.fs-6 Contact Information
+            .row
+              .col-md-4.mb-2
+                label.form-label.small(for='phone') Phone
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='phone' 
+                  name='phone' 
+                  placeholder='Enter phone number'
+                  value=patient ? patient.contact_info.phone : ''
+                  required
+                )
+              .col-md-4.mb-2
+                label.form-label.small(for='email') Email
+                input.form-control.form-control-sm(
+                  type='email' 
+                  id='email' 
+                  name='email' 
+                  placeholder='Enter email address'
+                  value=patient ? patient.contact_info.email : ''
+                  required
+                )
+              .col-md-4.mb-2
+                label.form-label.small(for='address') Address
+                input.form-control.form-control-sm(
+                  type='text' 
+                  id='address' 
+                  name='address' 
+                  placeholder='Enter home address'
+                  value=patient ? patient.contact_info.address : ''
+                  required
+                )
+            .d-flex.justify-content-between.mt-4
+              a.btn.btn-sm.btn-secondary.px-3(href='/patients') Back to List
+              button.btn.btn-sm.btn-primary.px-4(type='submit') #{patient ? 'Update' : 'Create'}

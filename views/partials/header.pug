@@ -1,0 +1,16 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.rounded.px-3.py-2.sticky-top(style="z-index: 1030;")
+  .container-fluid
+    a.navbar-brand(href="/")
+      span(style="font-weight: 700; font-size: 1.5rem; letter-spacing: 1px; color: white;") Healthcare
+    button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+      span.navbar-toggler-icon
+    #navbarNav.collapse.navbar-collapse
+      ul.navbar-nav.ms-auto
+        li.nav-item
+          a.nav-link(href="/", class=currentPath === '/' ? 'active' : '') Home
+        li.nav-item 
+          a.nav-link(href="/doctors", class=currentPath.startsWith('/doctors') ? 'active' : '') Doctors
+        li.nav-item
+          a.nav-link(href="/patients", class=currentPath.startsWith('/patients') ? 'active' : '') Patients
+        li.nav-item
+          a.nav-link(href="/appointments", class=currentPath.startsWith('/appointments') ? 'active' : '') Appointments
