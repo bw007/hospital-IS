@@ -11,39 +11,60 @@ const renderAddPatientPage = (req, res) => {
 
 // GET /patients
 const getAllPatients = async (req, res) => {
+  let { from, to } = req.query;
   try {
-    let query = "SELECT * FROM patients";
-    const queryParams = [];
+    if (from) from = new Date(from).toISOString();
+    if (to) to = new Date(to + 'T23:59:59').toISOString();
+    let queryParams = [];
+    let query = `SELECT * FROM patients`;
+
+    const whereClauses = [];
+
+    if (from && to) {
+      queryParams.push(from, to);
+      whereClauses.push(`
+        NOT EXISTS (
+          SELECT 1 FROM appointments 
+          WHERE appointments.patient_id = patients.id 
+          AND appointments.appointment_datetime BETWEEN $1 AND $2
+        )
+      `);
+    }
 
     if (req.query.medical_history) {
-      const selectedMedicalConditions = Array.isArray(req.query.medical_history) 
-        ? req.query.medical_history 
+      const selected = Array.isArray(req.query.medical_history)
+        ? req.query.medical_history
         : [req.query.medical_history];
-      
-      if (selectedMedicalConditions.length > 0) {
-        const conditions = selectedMedicalConditions.map((condition, index) => {
+
+      if (selected.length > 0) {
+        const offset = queryParams.length;
+        const conditions = selected.map((condition, i) => {
           queryParams.push(`%"${condition}"%`);
-          return `medical_history LIKE $${index + 1}`;
+          return `medical_history LIKE $${offset + i + 1}`;
         });
-        query += " WHERE " + conditions.join(" OR ");
+        whereClauses.push(`(` + conditions.join(" OR ") + `)`);
       }
     }
 
+    if (whereClauses.length > 0) {
+      query += ` WHERE ${whereClauses.join(" AND ")}`;
+    }
+    
     const patients = await pool.query(query, queryParams);
 
     patients.rows.forEach((patient) => {
-      let medicalHistory = [];
-      
-      if (patient.medical_history) {
-        medicalHistory = patient.medical_history
-          .replace(/[{}]/g, '')
-          .split(',')
-          .map(item => item.replace(/"/g, '').trim());
+      if (!patient.medical_history) {
+        patient.medical_history = "";
+        return;
       }
       
-      patient.medical_history = medicalHistory.map((condition) => {
-        const found = medicalConditions.find((c) => c.value === condition.trim());
-        return found ? found.label : condition.trim();
+      const history = Array.isArray(patient.medical_history) 
+        ? patient.medical_history 
+        : patient.medical_history.replace(/[{}]/g, '').split(',').map(h => h.replace(/"/g, '').trim());
+        
+      patient.medical_history = history.map(h => {
+        const found = medicalConditions.find(c => c.value === h);
+        return found ? found.label : h;
       }).join(", ");
     });
 
@@ -54,9 +75,9 @@ const getAllPatients = async (req, res) => {
       query: req.query,
       message: patients.rows.length === 0 ? "No patients." : null
     });
+
   } catch (error) {
-    console.error("Database error:", error);
-    console.error(error.stack);
+    console.error("Error:", error);
     res.status(500).render("pages/error", {
       title: "Error",
       message: "Could not retrieve patients data"
@@ -77,7 +98,8 @@ const getPatientById = async (req, res) => {
     console.log(medicalHistory);
     
     patient.rows[0].medical_history = medicalHistory.map((condition) => {
-      return medicalConditions.find((c) => c.value === condition.trim()).label;
+      const found = medicalConditions.find((c) => c.value === condition.trim());
+      return found ? found.label : condition.trim();
     }).join(", ");
 
     res.render("pages/patient-card", {
