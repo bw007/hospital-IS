@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+const Doctor = require('../models/Doctor');
 
 // Render the add doctor page
 const renderAddDoctorPage = (req, res) => {
@@ -10,12 +10,12 @@ const renderAddDoctorPage = (req, res) => {
 // Get all doctors
 const getAllDoctors = async (req, res) => {
   try {
-    const doctors = await pool.query('SELECT * FROM doctors');
-    console.log(doctors.rows);
+    const doctors = await Doctor.getAllDoctors();
+    console.log(doctors);
     
     res.render('pages/doctors', {
       title: 'Doctors List',
-      doctors: doctors.rows
+      doctors
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -25,11 +25,11 @@ const getAllDoctors = async (req, res) => {
 // Get a single doctor by ID
 const getDoctorById = async (req, res) => {
   try {
-    const doctor = await pool.query('SELECT * FROM doctors WHERE id = $1', [req.params.id]);
+    const doctor = await Doctor.getDoctorById(req.params.id);
     
     res.render('pages/doctor-card', {
       title: `Doctor details`,
-      doctor: doctor.rows[0]
+      doctor
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,11 +41,8 @@ const addNewDoctor = async (req, res) => {
   try {
     const { name, specialty, ...contactFields } = req.body;
     const contact_info = JSON.stringify(contactFields);
-    
-    await pool.query(
-      'INSERT INTO doctors (name, specialty, contact_info) VALUES ($1, $2, $3) RETURNING *',
-      [name, specialty, contact_info]
-    );
+
+    await Doctor.addNewDoctor(name, specialty, contact_info)
     
     res.redirect('/doctors');
   } catch (error) {
@@ -56,11 +53,11 @@ const addNewDoctor = async (req, res) => {
 // Render the update doctor page
 const renderUpdateDoctorPage = async (req, res) => {
   try {
-    const doctor = await pool.query('SELECT * FROM doctors WHERE id = $1', [req.params.id]);
+    const doctor = await Doctor.getDoctorById(req.params.id);
     
     res.render('pages/doctor-form', {
       title: 'Update Doctor',
-      doctor: doctor.rows[0]
+      doctor
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -73,10 +70,7 @@ const updateDoctor = async (req, res) => {
     const { name, specialty, ...contactFields } = req.body;
     const contact_info = JSON.stringify(contactFields);
     
-    await pool.query(
-      'UPDATE doctors SET name = $1, specialty = $2, contact_info = $3 WHERE id = $4 RETURNING *',
-      [name, specialty, contact_info, req.params.id]
-    );
+    await Doctor.updateDoctor(name, specialty, contact_info, req.params.id)
     
     res.redirect('/doctors');
   } catch (error) {
@@ -86,8 +80,8 @@ const updateDoctor = async (req, res) => {
 
 // Delete doctor
 const deleteDoctor = async (req, res) => {
-  try {    
-    await pool.query('DELETE FROM doctors WHERE id = $1', [req.params.id]);
+  try {
+    await Doctor.deleteDoctor(req.params.id)
     
     res.status(200).json({ message: "Doctor deleted" })
   } catch (error) {
