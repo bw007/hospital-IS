@@ -31,7 +31,7 @@ class Doctor {
   }
 
   // Add doctor
-  static async addNewDoctor(name, specialty, contact_info) {
+  static async addNewDoctor({ name, specialty, contact_info }) {
     try {
       const result = await pool.query(
         "INSERT INTO doctors (name, specialty, contact_info) VALUES ($1, $2, $3) RETURNING *",
