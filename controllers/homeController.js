@@ -13,8 +13,11 @@ const getHomePage = async (req, res) => {
       appointmentsTotal: parseInt(appointments.rows[0].count),
     });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    console.error('Error loading home page:', error);
+    res.status(500).render('pages/error', {
+      title: 'Error',
+      message: 'Failed to load home page data'
+    });
   }
 };
 
