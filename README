@@ -1,0 +1,44 @@
+# 🏥 Healthcare Management System
+
+This is a small-scale backend system to manage a healthcare application. It includes support for patients, doctors, and appointments, built using Node.js and PostgreSQL.
+
+---
+
+## 🔧 Technologies Used
+
+- **Node.js** – backend runtime
+- **Express.js** – REST API framework
+- **PostgreSQL** – relational database
+- **dotenv** – for environment variable management
+- **pg** – PostgreSQL client for Node
+
+---
+
+### 1. 📥 Clone the Repository
+
+git clone https://github.com/bw007/hospital-IS
+cd hospital-IS
+npm install
+
+---
+
+### 2. Setup Environment Variables
+Create a .env file in the root directory with the following content:
+
+PORT=your_port
+DB_HOST=your_host
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+DB_PORT=your_port
+DB_NAME=your_db_name
+
+---
+
+### 3. Set Up the Database
+Step 1: Create Database
+Step 2: Step 2: Import Schema (config/database.sql)
+
+---
+
+### 4. Start the Server
+In terminal: npm start
