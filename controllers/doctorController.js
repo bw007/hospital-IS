@@ -60,7 +60,7 @@ const addNewDoctor = async (req, res) => {
     const { name, specialty, ...contactFields } = req.body;
     const contact_info = JSON.stringify(contactFields);
 
-    await Doctor.addNewDoctor(name, specialty, contact_info)
+    await Doctor.addNewDoctor({ name, specialty, contact_info })
     
     res.redirect('/doctors');
   } catch (error) {
