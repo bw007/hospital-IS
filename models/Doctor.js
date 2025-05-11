@@ -6,9 +6,20 @@ class Doctor {
   }
 
   // Get all doctors
-  static async getAllDoctors() {
+  static async getAllDoctors({ orderBy = 'name', orderDir = 'asc' } = {}) {
     try {
-      const result = await pool.query("SELECT * FROM doctors");
+      let query = "SELECT * FROM doctors";
+
+      const allowedFields = ['name', 'created_at', 'age'];
+      const allowedDirections = ['asc', 'desc'];
+      
+      if (allowedFields.includes(orderBy.toLowerCase()) && 
+          allowedDirections.includes(orderDir.toLowerCase())) {
+        query += ` ORDER BY ${orderBy} ${orderDir.toUpperCase()}`;
+      }
+
+      const result = await pool.query(query);
+
       return result.rows.map((row) => new Doctor(row));
     } catch (error) {
       console.error("Error:", error);
