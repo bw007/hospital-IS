@@ -7,7 +7,7 @@ class Patient {
   }
 
   // Get all patients
-  static async getAllPatients({ from, to, medical_history } = {}) {
+  static async getAllPatients({ from, to, medical_history, orderBy = 'created_at', orderDir = 'asc' } = {}) {
     try {
       let queryParams = [];
       let query = `SELECT * FROM patients`;
@@ -42,6 +42,12 @@ class Patient {
   
       if (whereClauses.length > 0) {
         query += ` WHERE ${whereClauses.join(" AND ")}`;
+      }
+
+      const allowedFields = ['name', 'created_at', 'age'];
+      const allowedDirections = ['asc', 'desc'];
+      if (allowedFields.includes(orderBy.toLowerCase()) && allowedDirections.includes(orderDir.toLowerCase())) {
+        query += ` ORDER BY ${orderBy} ${orderDir.toUpperCase()}`;
       }
 
       const result = await pool.query(query, queryParams);
