@@ -41,15 +41,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger
-<<<<<<< HEAD
 CREATE TRIGGER update_doctors_updated_at
 BEFORE UPDATE ON doctors
 FOR EACH ROW
 EXECUTE FUNCTION update_timestamp();
 
 -- Trigger
-=======
->>>>>>> f853560fece05fac4a8da4cf87226f2f7eed3318
 CREATE TRIGGER update_patients_updated_at
 BEFORE UPDATE ON patients
 FOR EACH ROW
